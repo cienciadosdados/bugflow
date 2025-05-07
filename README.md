@@ -254,40 +254,40 @@ Isso permite testar o sistema com bugs específicos sem precisar processar todos
 ### Agentes e suas Funções
 
 #### AG1: Classificador de Componente
-- **Função**: Analisa o chamado e classifica em um dos setores
-- **Comportamento**: Examina o conteúdo e identifica se pertence a Financeiro, Jurídico, Marketing ou Vendas
-- **Resultado**: Setor + justificativa da classificação
+- **Função**: Analisa o bug e identifica o componente de software afetado
+- **Comportamento**: Examina o conteúdo e classifica em Frontend, Backend, Database, DevOps, Security, Integration, UI/UX ou Infrastructure
+- **Resultado**: Componente afetado + justificativa detalhada da classificação
 
-#### AG2: Classificador de Prioridade
-- **Função**: Define a prioridade do chamado
-- **Comportamento**: Avalia o impacto e urgência para classificar como Urgente, Intermediário ou Normal
-- **Resultado**: Nível de prioridade + justificativa
+#### AG2: Classificador de Severidade
+- **Função**: Define a severidade do bug
+- **Comportamento**: Avalia o impacto técnico e de negócio para classificar como Critico, Grave ou Menor
+- **Resultado**: Nível de severidade + justificativa detalhada
 
 #### AG3: Analista Técnico
-- **Função**: Fornece análise técnica detalhada
-- **Comportamento**: Identifica o sistema afetado, problema específico, impacto e propõe soluções
-- **Resultado**: Análise técnica estruturada
+- **Função**: Fornece análise técnica detalhada do bug
+- **Comportamento**: Identifica a causa raiz, avalia o impacto técnico e propõe soluções viáveis
+- **Resultado**: Análise técnica estruturada com causa raiz, impacto e soluções propostas
 
-#### AG4: Gerenciador de Chamado
-- **Função**: Coordena o fluxo do chamado
-- **Comportamento**: Verifica as classificações, define próximos passos e responsáveis
-- **Resultado**: Status e plano de ação
+#### AG4: Gerenciador de Resolução
+- **Função**: Coordena o processo de resolução do bug
+- **Comportamento**: Define responsáveis, prazos e prioridades com base nas classificações anteriores
+- **Resultado**: Plano de ação detalhado com responsável, prazo e status de andamento
 
-#### AG5: Gerador de Relatório
-- **Função**: Cria relatório final consolidado
-- **Comportamento**: Integra todas as informações em um relatório estruturado
-- **Resultado**: Relatório completo com todos os detalhes
+#### AG5: Documentador de Bugs
+- **Função**: Cria documentação estruturada do bug
+- **Comportamento**: Integra todas as informações em formatos Markdown e HTML com diagramas Mermaid
+- **Resultado**: Relatórios completos em múltiplos formatos salvos como arquivos locais (`bug_X_relatorio.md` e `bug_X_relatorio.html`)
 
 ### Arquitetura de Bancos de Dados
 
 #### Banco de Dados Relacional (Neon DB)
 
 ```
-┌─────────────┐       ┌─────────────────────┐       ┌────────────────────────┐
+┈────────────┈       ┈───────────────────┈       ┈──────────────────────┈
 │             │       │                     │       │                        │
-│  chamados   │──┐    │ classificacao_setor │       │ classificacao_prioridade│
+│    bugs     │──┈    │ classificacao_componente │       │ classificacao_severidade│
 │             │  │    │                     │       │                        │
-└─────────────┘  │    └─────────────────────┘       └────────────────────────┘
+└─────────────┐  │    └───────────────────┐       └──────────────────────┐──┘
                  │                 ▲                              ▲
                  │                 │                              │
                  └─────────────────┴──────────────────────────────┘
@@ -304,20 +304,20 @@ Isso permite testar o sistema com bugs específicos sem precisar processar todos
 ```
 
 #### Banco de Vetores (Pinecone)
-- Armazena embeddings de chamados para busca semântica
-- Permite encontrar chamados similares rapidamente
+- Armazena embeddings de bugs para busca semântica
+- Permite encontrar bugs similares rapidamente
 - Utiliza embeddings da OpenAI para representação vetorial
 
 ### Fluxo dos Dados
 
 ```
-┌─────────────┐     ┌──────────┐     ┌──────────┐     ┌──────────┐
-│  Chamado    │────►│          │────►│          │────►│          │
-│  Inicial    │     │   AG1    │     │   AG2    │     │   AG3    │
+┈────────────┈     ┈─────────┈     ┈─────────┈     ┈─────────┈
+│    Bug      │────┐│          │────┐│          │────┐│          │
+│  Reportado  │     │   AG1    │     │   AG2    │     │   AG3    │
 │             │     │          │     │          │     │          │
-└─────────────┘     └──────────┘     └──────────┘     └──────────┘
+└────────────┐     └─────────┐     └─────────┐     └─────────┐
                      Classificar      Definir          Análise
-                       Setor         Prioridade        Técnica
+                     Componente      Severidade        Técnica
                          │               │                │
                          ▼               ▼                ▼
                     ┌─────────────────────────────────────────┐
@@ -328,13 +328,13 @@ Isso permite testar o sistema com bugs específicos sem precisar processar todos
                     └─────────────────────────────────────────┘
                               ▲                ▲
                               │                │
-                     ┌────────┴───┐      ┌────┴────────┐
-                     │            │      │             │
-                     │    AG4     │      │    AG5      │
-                     │            │      │             │
-                     └────────────┘      └─────────────┘
-                      Gerenciar           Gerar
-                       Chamado            Relatório
+                      ┈─────────┈      ┈──────────┈
+                      │            │      │             │
+                      │    AG4     │      │    AG5      │
+                      │            │      │             │
+                      └──────────┐      └───────────┐
+                       Gerenciar          Documentar
+                       Resolução             Bug
 ```
 
 ## 🔧 Solução de Problemas
